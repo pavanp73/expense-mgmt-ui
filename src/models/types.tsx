@@ -18,3 +18,10 @@ export interface Transaction {
   transactionDate: string;
   description: string;
 }
+
+export const years = [2023, 2024, 2025, 2026];
+
+export const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];

@@ -2,33 +2,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AddTransaction from "./TransactionForm";
-import { Transaction } from "../models/types";
-
-const YEARS = [2023, 2024, 2025, 2026];
-const MONTHS = [
-  { value: "01", label: "January" },
-  { value: "02", label: "February" },
-  { value: "03", label: "March" },
-  { value: "04", label: "April" },
-  { value: "05", label: "May" },
-  { value: "06", label: "June" },
-  { value: "07", label: "July" },
-  { value: "08", label: "August" },
-  { value: "09", label: "September" },
-  { value: "10", label: "October" },
-  { value: "11", label: "November" },
-  { value: "12", label: "December" },
-];
+import { months, Transaction, years } from "../models/types";
 
 const PAGE_SIZE = 10;
 
 const TransactionsTable: React.FC = () => {
+    const now = new Date();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const [year, setYear] = useState<string>(new Date().getFullYear().toString());
-  const [month, setMonth] = useState<string>(
-    ("0" + (new Date().getMonth() + 1)).slice(-2)
-  );
+  const [month, setMonth] = useState<string>(months[now.getMonth()]);
   const [sortBy, setSortBy] = useState<keyof Transaction>("transactionDate");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -120,7 +103,7 @@ const TransactionsTable: React.FC = () => {
               value={year}
               onChange={(e) => setYear(e.target.value)}
             >
-              {YEARS.map((y) => (
+              {years.map((y) => (
                 <option key={y} value={y.toString()}>
                   {y}
                 </option>
@@ -134,9 +117,9 @@ const TransactionsTable: React.FC = () => {
               value={month}
               onChange={(e) => setMonth(e.target.value)}
             >
-              {MONTHS.map((m) => (
-                <option key={m.value} value={m.value}>
-                  {m.label}
+              {months.map((m) => (
+                <option key={m} value={m}>
+                  {m}
                 </option>
               ))}
             </select>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Transaction } from "../models/types";
-import MONTHS from "../utils/months";
+import { months } from "../models/types";
 
 const Dashboard: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -12,24 +12,19 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const now = new Date();
-    setSelectedMonth(String(now.getMonth() + 1).padStart(2, "0"));
+    setSelectedMonth(months[now.getMonth()]);
     setSelectedYear(String(now.getFullYear()));
   }, []);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/transaction");
-        const filtered = res.data.filter((tx: Transaction) => {
-          const [year, month] = tx.transactionDate.split("-");
-          return year === selectedYear && month === selectedMonth;
-        });
-
-        setTransactions(filtered);
+        const res = await axios.get(`http://localhost:8080/transaction?year=${selectedYear}&month=${selectedMonth}`);
+        setTransactions(res.data);
 
         const totals: { [key: string]: number } = {};
         let sum = 0;
-        filtered.forEach((tx: { category: string | number; amount: number; }) => {
+        res.data.forEach((tx: { category: string | number; amount: number; }) => {
           totals[tx.category] = (totals[tx.category] || 0) + tx.amount;
           sum += tx.amount;
         });
@@ -67,7 +62,7 @@ const Dashboard: React.FC = () => {
     <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>
-          Summary - {MONTHS.find((m) => m.value === selectedMonth)?.label} {selectedYear}
+          Summary - {selectedMonth} {selectedYear}
         </h4>
         <div className="d-flex gap-2">
           <select
@@ -76,9 +71,9 @@ const Dashboard: React.FC = () => {
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
           >
-            {MONTHS.map((m) => (
-              <option key={m.value} value={m.value}>
-                {m.label}
+            {months.map((m) => (
+              <option key={m} value={m}>
+                {m}
               </option>
             ))}
           </select>

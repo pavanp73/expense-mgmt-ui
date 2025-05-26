@@ -9,15 +9,11 @@ import {
     ChartOptions,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { ChartData } from "../models/types";
+import { ChartData, months } from "../models/types";
 import COLORS from "../utils/colors";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
 
 const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
 
